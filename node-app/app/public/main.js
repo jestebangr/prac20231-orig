@@ -1,4 +1,4 @@
-import { createApp, reactive, h } from './vue.esm-browser.js'
+import { createApp, reactive, h, computed } from './vue.esm-browser.js'
 const reactProps = reactive({
   movies: [],
   student: '',
@@ -14,9 +14,12 @@ fetch("/api")
 
 const app = createApp(() => h({
   props: ['movies', 'student', 'created'],
-  setup() {
+  setup(props) {
     const title = 'ARSO 2023-1'
-    return { title }
+    const fmtCreated = computed( () =>  
+      new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: 'short'}).format(new Date(props.created))
+    )
+    return { title, fmtCreated }
   },
   template: '#main',
 }, reactProps))
@@ -34,5 +37,9 @@ app.component('filmCard', {
 app.component('genRes',{
   props: ['genres'],
   template: '#gen-info'
+})
+
+app.component('box',{
+  template: '#box'
 })
 app.mount('#app')
